@@ -1,15 +1,7 @@
 import React from 'react'
-import { View, Button, Text } from 'react-native'
-
-async function getPhotos() {
-  try {
-    let res = await fetch('http://jsonplaceholder.typicode.com/photos?_page=1&_limit=20')
-    if (!res.ok) throw Error(res.statusText)
-    return res.json()
-  } catch(error) {
-    console.log(error)
-  }
-}
+import { View, ScrollView, Button, Text, TouchableOpacity, Alert } from 'react-native'
+import PhotoGrid from './components/PhotoGrid'
+import api from './api'
 
 class HomeScreen extends React.Component {
   state = {
@@ -21,7 +13,8 @@ class HomeScreen extends React.Component {
   };
 
   async componentDidMount() {
-    const json = await getPhotos()
+    console.log('componen moutend')
+    const json = await api.getPhotosPage(1, 20)
     this.setState({photos: json})
   }
 
@@ -31,19 +24,14 @@ class HomeScreen extends React.Component {
     const { navigate } = this.props.navigation;
 
     return (
-      <View>
-        <Button
-          title="HomeScreen"
-          onPress={() => navigate('Image', {name: 'Jane'})}
-        />
-        <Button
-          title="HomeScreen 2."
-          onPress={() => navigate('Image', {})}
-        />
-        {
-          photos.map(photo => <Text>{photo.id}</Text>)
-        }
-      </View>
+      <ScrollView>
+        <PhotoGrid navigate={navigate} />
+        <TouchableOpacity onPress={() => Alert.alert('foooooo')}>
+          <View>
+            <Text>TTOOUUUUCCCHHHHH</Text>
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
     );
   }
 }
